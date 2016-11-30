@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ghostkeeper
 # Cura is released under the terms of the AGPLv3 or higher.
 
 from . import X3GWriter
@@ -13,7 +13,7 @@ def getMetaData():
             "author": "Malyan",
             "version": "1.0",
             "description": catalog.i18nc("X3G Writer Plugin Description", "Writes X3G to a file"),
-            "api": 2
+            "api": 3
         },
 
         "mesh_writer": {
