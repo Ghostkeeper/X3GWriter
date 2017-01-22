@@ -6,6 +6,7 @@ Currently only Windows is supported. This limitation is due to a binary executab
 
 ## Installation
 To install this plug-in follow the following steps:
+
 1. Download the .zip file from Github: https://github.com/Ghostkeeper/X3GWriter/archive/master.zip
 2. Open the .zip file with your favourite archiver application (e.g. 7-zip).
 3. Extract the contents of the .zip archive to Cura's plug-in directory in your installation, e.g. `C:\Program Files\Cura\plugins`.
