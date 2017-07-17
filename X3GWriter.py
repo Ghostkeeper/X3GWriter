@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Malyan
+# Copyright (c) 2016 Ghostkeeper
 # Cura is released under the terms of the AGPLv3 or higher.
 
 from UM.Mesh.MeshWriter import MeshWriter
@@ -13,7 +13,13 @@ class X3GWriter(MeshWriter):
         super().__init__()
         self._gcode = None
 
-    def write(self, stream, node, mode = MeshWriter.OutputMode.TextMode):
+    ##  Write the X3G data to a stream.
+    #
+    #   \param stream The stream to write X3G data to.
+    #   \param nodes A sequence of nodes to write to the stream.
+    #   \param mode The output mode to use. This is ignored, since it has no
+    #   meaning.
+    def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
         #Get the g-code.
         scene = Application.getInstance().getController().getScene()
         gcode_list = getattr(scene, "gcode_list")
