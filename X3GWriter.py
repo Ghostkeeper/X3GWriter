@@ -55,8 +55,8 @@ class X3GWriter(MeshWriter):
         Logger.log("d", "File name: %s", file_name)
         binary_path = os.path.dirname(os.path.realpath(__file__))
         binary_filename = os.path.join(binary_path, "gpx")
-		if UM.Platform.Platform.isWindows():
-			binary_filename += ".exe"
+        if UM.Platform.Platform.isWindows():
+            binary_filename += ".exe"
 
         command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
         safes = [os.path.expandvars(p) for p in command]
