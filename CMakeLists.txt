@@ -20,5 +20,6 @@ set(installed_files
 	cfg.ini
 	param.ini
 	X3GWriter.py
+	plugin.json
 )
 install(FILES ${installed_files} ${GPX_EXECUTABLE} DESTINATION .)
