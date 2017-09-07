@@ -57,6 +57,9 @@ class X3GWriter(MeshWriter):
         binary_filename = os.path.join(binary_path, "gpx")
         if UM.Platform.Platform.isWindows():
             binary_filename += ".exe"
+        if UM.Platform.Platform.isOSX(): #For the cross-platform release, we need to disambiguate between MacOS and Linux.
+            if os.path.isfile(binary_filename + "_macos"): #Still fall back to the default name if the MacOS-specific file doesn't exist.
+                binary_filename += "_macos"
 
         command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
         safes = [os.path.expandvars(p) for p in command]
@@ -78,7 +81,6 @@ class X3GWriter(MeshWriter):
 ##  Removes the temporary g-code file that is an intermediary result.
 #
 #   This should be called at the end of the write, also if the write failed.
-#
 #   \param temp_file The URI of the temporary file.
 def _removeTemporary(temp_file):
     try:
