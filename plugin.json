@@ -1,7 +1,7 @@
 {
 	"name": "X3G Writer",
 	"author": "Ghostkeeper",
-	"description": "Allows saving the resulting slice as an X3G file."
+	"description": "Allows saving the resulting slice as an X3G file.",
 	"version": "2.6",
 	"api": 4,
 	"i18n-catalog": "x3gwriter"
