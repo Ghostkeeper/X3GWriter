@@ -22,12 +22,13 @@ endif()
 mark_as_advanced(GPX_EXECUTABLE)
 
 #Installation.
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/plugin.json.in plugin.json)
 set(installed_files
 	${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
 	${CMAKE_CURRENT_SOURCE_DIR}/cfg.ini
 	${CMAKE_CURRENT_SOURCE_DIR}/param.ini
 	${CMAKE_CURRENT_SOURCE_DIR}/X3GWriter.py
-	${CMAKE_CURRENT_SOURCE_DIR}/plugin.json
+	${CMAKE_CURRENT_BINARY_DIR}/plugin.json
 	${GPX_EXECUTABLE}
 )
 install(FILES ${installed_files} DESTINATION X3GWriter)
