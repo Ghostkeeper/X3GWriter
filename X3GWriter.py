@@ -54,7 +54,7 @@ class X3GWriter(MeshWriter):
         Logger.log("d", "App path: %s", os.getcwd())
         Logger.log("d", "File name: %s", file_name)
         binary_path = os.path.dirname(os.path.realpath(__file__))
-        binary_filename = os.path.join(binary_path, "cura_x3g")
+        binary_filename = os.path.join(binary_path, "gpx")
 		if UM.Platform.Platform.isWindows():
 			binary_filename += ".exe"
 
