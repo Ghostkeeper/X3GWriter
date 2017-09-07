@@ -1,12 +1,14 @@
-# Copyright (c) 2016 Ghostkeeper
+# Copyright (c) 2017 Ghostkeeper
 # Cura is released under the terms of the AGPLv3 or higher.
+
+import io
+import subprocess
+import os
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
 from UM.Application import Application
-import io
-import subprocess
-import os
+import UM.Platform
 
 class X3GWriter(MeshWriter):
     def __init__(self):
@@ -33,10 +35,10 @@ class X3GWriter(MeshWriter):
             return False
         file_directory = os.path.dirname(os.path.realpath(file_name)) #Save the tempfile next to the real output file.
         i = 0
-        temp_file = file_directory + "/output" + str(i) + ".gcode"
+        temp_file = os.path.join(file_directory, "output" + str(i) + ".gcode")
         while os.path.isfile(temp_file):
             i += 1
-            temp_file = file_directory + "/output" + str(i) + ".gcode"
+            temp_file = os.path.join(file_directory, "output" + str(i) + ".gcode")
 
         #Write the g-code to the temporary file.
         try:
@@ -52,15 +54,18 @@ class X3GWriter(MeshWriter):
         Logger.log("d", "App path: %s", os.getcwd())
         Logger.log("d", "File name: %s", file_name)
         binary_path = os.path.dirname(os.path.realpath(__file__))
-        binary_filename = binary_path + r"\cura_x3g.exe"
-        command = [binary_filename, "-p", "-m", "r1d", "-c", binary_path + r"\cfg.ini", temp_file, file_name]
+        binary_filename = os.path.join(binary_path, "cura_x3g")
+		if UM.Platform.Platform.isWindows():
+			binary_filename += ".exe"
+
+        command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
         safes = [os.path.expandvars(p) for p in command]
         Logger.log("d", "Command: %s", str(command))
         stream.close() #Close the file so that the binary can write to it.
         try:
             process = subprocess.Popen(safes, shell=True)
             process.wait()
-            output = process.communicate(b'y')
+            output = process.communicate(b"y")
             Logger.log("d", str(output))
         except Exception as e:
             Logger.log("e", "System call to X3G converter application failed: %s", str(e))
