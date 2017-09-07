@@ -23,4 +23,4 @@ set(installed_files
 	X3GWriter.py
 	plugin.json
 )
-install(FILES ${installed_files} ${GPX_EXECUTABLE} DESTINATION .)
+install(FILES ${installed_files} ${GPX_EXECUTABLE} DESTINATION X3GWriter)
