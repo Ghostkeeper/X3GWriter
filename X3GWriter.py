@@ -66,7 +66,7 @@ class X3GWriter(MeshWriter):
         Logger.log("d", "Command: %s", str(command))
         stream.close() #Close the file so that the binary can write to it.
         try:
-            process = subprocess.Popen(safes, shell=True)
+            process = subprocess.Popen(safes)
             process.wait()
             output = process.communicate(b"y")
             Logger.log("d", str(output))
