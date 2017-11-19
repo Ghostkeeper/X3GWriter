@@ -63,7 +63,7 @@ class X3GWriter(MeshWriter):
 
         command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
         safes = [os.path.expandvars(p) for p in command]
-        Logger.log("d", "Command: %s", str(command))
+        Logger.log("d", "Calling GPX: {command}".format(command=" ".join(command)))
         stream.close() #Close the file so that the binary can write to it.
         try:
             process = subprocess.Popen(safes)
