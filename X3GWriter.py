@@ -31,15 +31,23 @@ class X3GWriter(MeshWriter):
         steps_per_mm_x = Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_width", "steps_per_mm")
         steps_per_mm_y = Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_depth", "steps_per_mm")
         steps_per_mm_z = Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_height", "steps_per_mm")
-        machine_max_feedrate_x = int(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_x", "value"))*60
-        machine_max_feedrate_y = int(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_y", "value"))*60
-        machine_max_feedrate_z = int(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_z", "value"))*60
-        machine_max_feedrate_e = int(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_e", "value"))*60
-        machine_heated_bed = Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_heated_bed", "value")
+        machine_max_feedrate_x = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_x", "value"))*60
+        machine_max_feedrate_y = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_y", "value"))*60
+        machine_max_feedrate_z = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_z", "value"))*60
+        machine_max_feedrate_e = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_feedrate_e", "value"))*60
+        machine_max_acceleration_x = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_acceleration_x", "value"))
+        machine_max_acceleration_y = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_acceleration_y", "value"))
+        machine_max_acceleration_z = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_acceleration_z", "value"))
+        machine_max_acceleration_e = float(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_max_acceleration_e", "value"))
+        machine_heated_bed = int(Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_heated_bed", "value") == True)
+
+        machine_endstop_x = Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_width", "endstop_is_max")
+        machine_endstop_y = Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_depth", "endstop_is_max")
+        machine_endstop_z = Application.getInstance().getGlobalContainerStack().getBottom().getProperty("machine_height", "endstop_is_max")
 
         extruders = ExtruderManager.getInstance().getExtruderStacks()
 
-        if len(extruders) != 2:
+        if len(extruders) > 2:
             Logger.log("e", "X3G based printer has %s extruders, can only have one or two!", len(extruders))
 
         # Info on where this came from
@@ -51,25 +59,35 @@ class X3GWriter(MeshWriter):
         output_config.append("build_progress=1") # generate build progress % in output x3g
         output_config.append("ditto_printing=0") # disable ditto printing in firmware
         output_config.append("nominal_filament_diameter=1.75") #FIXME
+        output_config.append("jkn_k=0.0085") #FIXME
+        output_config.append("jkn_k2=0.0090") #FIXME
+        output_config.append("extruder_count={}".format(len(extruders)))
+
         # Skip [right] and [left] since defaults are OK (don't want to override gcode)
 
         output_config.append("[x]") # X params
         output_config.append("max_feedrate={}".format(machine_max_feedrate_x))
+        output_config.append("max_acceleration={}".format(machine_max_acceleration_x))
+        output_config.append("max_speed_change={}".format(machine_max_acceleration_x**0.5))
         output_config.append("home_feedrate={}".format(2500)) #FIXME
         output_config.append("steps_per_mm={}".format(steps_per_mm_x)) # steps per mm
-        #output_config.append("endstop={}".format(steps_per_mm_x)) #FIXME
+        output_config.append("endstop={}".format(machine_endstop_x))
 
         output_config.append("[y]") # Y params
         output_config.append("max_feedrate={}".format(machine_max_feedrate_y))
+        output_config.append("max_acceleration={}".format(machine_max_acceleration_y))
+        output_config.append("max_speed_change={}".format(machine_max_acceleration_y**0.5))
         output_config.append("home_feedrate={}".format(2500)) #FIXME
         output_config.append("steps_per_mm={}".format(steps_per_mm_y)) # steps per mm
-        #output_config.append("endstop={}".format(steps_per_mm_x)) #FIXME
+        output_config.append("endstop={}".format(machine_endstop_y))
 
         output_config.append("[z]") # Z params
         output_config.append("max_feedrate={}".format(machine_max_feedrate_z))
+        output_config.append("max_acceleration={}".format(machine_max_acceleration_z))
+        output_config.append("max_speed_change={}".format(machine_max_acceleration_z**0.5))
         output_config.append("home_feedrate={}".format(2500)) #FIXME
         output_config.append("steps_per_mm={}".format(steps_per_mm_z)) # steps per mm
-        #output_config.append("endstop={}".format(steps_per_mm_x)) #FIXME
+        output_config.append("endstop={}".format(machine_endstop_z))
 
         for e in extruders:
             if e.getProperty("extruder_nr", "value") == 0:
@@ -81,10 +99,11 @@ class X3GWriter(MeshWriter):
 
             extr_steps_per_mm = e.getProperty("extruder_nr", "steps_per_mm")
             extr_steps_per_rev = e.getProperty("extruder_nr", "steps_per_revolution")
-            machine_heated_bed = e.getProperty("extruder_nr", "steps_per_revolution")
 
             output_config.append(extruder_val) # Extruder param name
             output_config.append("max_feedrate={}".format(machine_max_feedrate_e))
+            output_config.append("max_acceleration={}".format(machine_max_acceleration_e))
+            output_config.append("max_speed_change={}".format(machine_max_acceleration_e**0.5))
             output_config.append("steps_per_mm={}".format(extr_steps_per_mm)) # steps per mm
             output_config.append("motor_steps={}".format(extr_steps_per_rev))
             output_config.append("has_heated_build_platform={}".format(machine_heated_bed))
