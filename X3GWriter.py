@@ -84,6 +84,8 @@ class X3GWriter(MeshWriter):
         else: #Linux (hopefully).
             executable = "gpx"
         result = os.path.join(gpx_path, executable)
+        result = os.path.expanduser(result)
+        result = os.path.expandvars(result)
         Logger.log("d", "GPX executable: {executable_file}".format(executable_file = result))
         return result
 
