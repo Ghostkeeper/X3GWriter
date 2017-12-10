@@ -124,6 +124,9 @@ class X3GWriter(MeshWriter):
         return result
 
     ##  Fills a CFG file with settings to convert to X3G with.
+    #
+    #   \param cfg_stream A file stream that is supposed to get filled. All old
+    #   data in the stream will get overwritten.
     def write_cfg(self, cfg_stream):
         global_stack = Application.getInstance().getGlobalContainerStack()
         extruder_stacks = cura.Settings.ExtruderManager.ExtruderManager.getInstance().getExtruderStacks()
