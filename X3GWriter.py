@@ -1,15 +1,18 @@
 # Copyright (c) 2017 Ghostkeeper
 # This plug-in is released under the terms of the AGPLv3 or higher.
 
-import subprocess
+import configparser #To write a CFG file as configuration for GPX.
+import math #For PI.
 import os
+import subprocess
 import tempfile
 import typing
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
-from UM.Application import Application
+from UM.Application import Application #To get the g-code from the scene and the global settings.
 import UM.Platform
+import cura.Settings.ExtruderManager
 
 class X3GWriter(MeshWriter):
     def __init__(self):
@@ -120,5 +123,72 @@ class X3GWriter(MeshWriter):
         Logger.log("d", "GPX command: {command}".format(command=" ".join(result)))
         return result
 
+    ##  Fills a CFG file with settings to convert to X3G with.
     def write_cfg(self, cfg_stream):
-        pass #TODO: Write the CFG file.
+        global_stack = Application.getInstance().getGlobalContainerStack()
+        extruder_stacks = cura.Settings.ExtruderManager.ExtruderManager.getInstance().getExtruderStacks()
+        parser = configparser.ConfigParser()
+
+        parser.add_section("printer") #Slicer data.
+        parser["printer"]["ditto_printing"] = "0" #Whether to duplicate the extrusion with all extruders.
+        parser["printer"]["build_progress"] = "0" #TODO: I don't know what data GPX needs to be able to 'build progress'.
+        parser["printer"]["packing_density"] = "1.0" #TODO: 1.0 is the default but I don't know what this means. It's not documented.
+        parser["printer"]["recalculate_5d"] = "1" #Whether to re-compute the extrusion widths.
+        parser["printer"]["nominal_filament_diameter"] = str(extruder_stacks[0].getProperty("material_diameter", "value")) #Use the first extruder since it was used for actual slicing, not just matching materials.
+        parser["printer"]["gcode_flavor"] = "makerbot" if global_stack.getProperty("machine_gcode_flavor", "value") == "Makerbot" else "reprap" #Default to RepRap for all other types.
+        parser["printer"]["build_platform_temperature"] = str(global_stack.getProperty("material_bed_temperature", "value")) #Is different for layer 0 though!
+
+        parser.add_section("x") #X axis.
+        parser["x"]["max_feedrate"] = str(global_stack.getProperty("machine_max_feedrate_x", "value")) #Maximum speed in this direction.
+        parser["x"]["home_feedrate"] = str(global_stack.getProperty("speed_travel", "value")) #Use normal travel speed to home with.
+        parser["x"]["steps_per_mm"] = str(global_stack.getProperty("machine_steps_per_mm_x", "value")) #How many steps of the stepper motor results in 1mm of movement for the print head.
+        parser["x"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_x", "value") else "1" #0 if the endstop is at positive X rather than negative X.
+
+        parser.add_section("y") #Y axis.
+        parser["y"]["max_feedrate"] = str(global_stack.getProperty("machine_max_feedrate_y", "value"))
+        parser["y"]["home_feedrate"] = str(global_stack.getProperty("speed_travel", "value"))
+        parser["y"]["steps_per_mm"] = str(global_stack.getProperty("machine_steps_per_mm_y", "value"))
+        parser["y"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_y", "value") else "1"
+
+        parser.add_section("z") #Z axis.
+        parser["z"]["max_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value"))
+        parser["z"]["home_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value")) #Always just go at maximum speed to home the build plate.
+        parser["z"]["steps_per_mm"] = str(global_stack.getProperty("machine_steps_per_mm_z", "value"))
+        parser["z"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_z", "value") else "1"
+
+        parser.add_section("a") #Right feeder (in the g-code labelled as T0).
+        parser["a"]["max_feedrate"] = str(extruder_stacks[0].getProperty("machine_max_feedrate_e", "value")) #Not configurable per extruder in Cura...
+        parser["a"]["steps_per_mm"] = str(extruder_stacks[0].getProperty("machine_steps_per_mm_e", "value")) #How many steps of the stepper motor results in 1mm of filament movement.
+        parser["a"]["motor_steps"] = str(extruder_stacks[0].getProperty("machine_feeder_wheel_diameter", "value") * math.pi * extruder_stacks[0].getProperty("machine_steps_per_mm_e", "value")) #Steps to make a full revolution of the feeder wheel.
+        parser["a"]["has_heated_build_platform"] = str(extruder_stacks[0].getProperty("machine_heated_bed", "value")) #Not configurable per extruder in Cura...
+
+        parser.add_section("right") #Right extruder (in the g-code labelled as T0).
+        parser["right"]["active_temperature"] = str(extruder_stacks[0].getProperty("material_print_temperature", "value"))
+        parser["right"]["standby_temperature"] = str(extruder_stacks[0].getProperty("material_standby_temperature", "value"))
+        parser["right"]["build_platform_temperature"] = str(extruder_stacks[0].getProperty("material_bed_temperature", "value")) #Not configurable per extruder in Cura...
+        parser["right"]["actual_filament_diameter"] = str(extruder_stacks[0].getProperty("material_diameter", "value"))
+        parser["right"]["packing_density"] = "1.0" #TODO: 1.0 is the default but I don't know what this is. It's not documented.
+
+        if global_stack.getProperty("machine_extruder_count", "value") >= 2:
+            parser.add_section("b") #Left feeder (in the g-code labelled as T1).
+            parser["b"]["max_feedrate"] = str(extruder_stacks[1].getProperty("machine_max_feedrate_e", "value"))
+            parser["b"]["steps_per_mm"] = str(extruder_stacks[1].getProperty("machine_steps_per_mm_e", "value"))
+            parser["b"]["motor_steps"] = str(extruder_stacks[1].getProperty("machine_feeder_wheel_diameter", "value") * math.pi * extruder_stacks[1].getProperty("machine_steps_per_mm_e", "value"))
+            parser["b"]["has_heated_build_platform"] = str(extruder_stacks[1].getProperty("machine_heated_bed", "value"))
+
+            parser.add_section("left") #Left extruder (in the g-code labelled as T1).
+            parser["left"]["active_temperature"] = str(extruder_stacks[1].getProperty("material_print_temperature", "value"))
+            parser["left"]["standby_temperature"] = str(extruder_stacks[1].getProperty("material_standby_temperature", "value"))
+            parser["left"]["build_platform_temperature"] = str(extruder_stacks[1].getProperty("material_bed_temperature", "value"))
+            parser["left"]["actual_filament_diameter"] = str(extruder_stacks[1].getProperty("material_diameter", "value"))
+            parser["left"]["packing_density"] = "1.0"
+
+        parser.add_section("machine")
+        parser["machine"]["nominal_filament_diameter"] = str(extruder_stacks[0].getProperty("material_diameter", "value")) #Seems to be the same as the printer category.
+        parser["machine"]["packing_density"] = "1.0" #Seems to be the same as the printer category.
+        parser["machine"]["nozzle_diameter"] = str(extruder_stacks[0].getProperty("machine_nozzle_diameter", "value")) #The diameter of the nozzle seems to be quintessentially per-extruder, but GPX doesn't allow setting it per extruder. Just take one of them.
+        parser["machine"]["extruder_count"] = str(global_stack.getProperty("machine_extruder_count", "value"))
+        parser["machine"]["timeout"] = "10" #Let's just always home at most 10 seconds. No need to make that configurable per printer (yet).
+        #parser["machine"]["steps_per_mm"] = ? #I think the steps_per_mm per axis will override this.
+
+        parser.write(cfg_stream)
