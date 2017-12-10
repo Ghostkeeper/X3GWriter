@@ -54,7 +54,7 @@ class X3GWriter(MeshWriter):
         Logger.log("d", "File name: %s", file_name)
         binary_filename = self.gpx_executable()
 
-        command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
+        command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(os.path.dirname(os.path.realpath(__file__)), "cfg.ini"), temp_file, file_name]
         safes = [os.path.expandvars(p) for p in command]
         Logger.log("d", "Calling GPX: {command}".format(command=" ".join(command)))
         stream.close() #Close the file so that the binary can write to it.
