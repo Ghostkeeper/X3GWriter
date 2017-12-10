@@ -1,7 +1,6 @@
 # Copyright (c) 2017 Ghostkeeper
-# Cura is released under the terms of the AGPLv3 or higher.
+# This plug-in is released under the terms of the AGPLv3 or higher.
 
-import io
 import subprocess
 import os
 
@@ -53,13 +52,7 @@ class X3GWriter(MeshWriter):
         #Call the converter application to convert it to X3G.
         Logger.log("d", "App path: %s", os.getcwd())
         Logger.log("d", "File name: %s", file_name)
-        binary_path = os.path.dirname(os.path.realpath(__file__))
-        binary_filename = os.path.join(binary_path, "gpx")
-        if UM.Platform.Platform.isWindows():
-            binary_filename += ".exe"
-        if UM.Platform.Platform.isOSX(): #For the cross-platform release, we need to disambiguate between MacOS and Linux.
-            if os.path.isfile(binary_filename + "_macos"): #Still fall back to the default name if the MacOS-specific file doesn't exist.
-                binary_filename += "_macos"
+        binary_filename = self.gpx_executable()
 
         command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
         safes = [os.path.expandvars(p) for p in command]
@@ -77,6 +70,22 @@ class X3GWriter(MeshWriter):
 
         _removeTemporary(temp_file)
         return True
+
+    ##  Gets the location of the executable to run for converting to X3G.
+    def gpx_executable(self):
+        gpx_path = os.path.dirname(os.path.realpath(__file__))
+        if UM.Platform.Platform.isWindows():
+            executable = "gpx.exe"
+        elif UM.Platform.Platform.isOSX(): #For the cross-platform release, we need to disambiguate between MacOS and Linux.
+            if os.path.isfile(os.path.join(gpx_path, "gpx_macos")): #Still fall back to the default name if the MacOS-specific file doesn't exist.
+                executable = "gpx_macos"
+            else:
+                executable = "gpx"
+        else: #Linux (hopefully).
+            executable = "gpx"
+        result = os.path.join(gpx_path, executable)
+        Logger.log("d", "GPX executable: {executable_file}".format(executable_file = result))
+        return result
 
 ##  Removes the temporary g-code file that is an intermediary result.
 #
