@@ -122,13 +122,3 @@ class X3GWriter(MeshWriter):
 
     def write_cfg(self, cfg_stream):
         pass #TODO: Write the CFG file.
-
-##  Removes the temporary g-code file that is an intermediary result.
-#
-#   This should be called at the end of the write, also if the write failed.
-#   \param temp_file The URI of the temporary file.
-def _removeTemporary(temp_file):
-    try:
-        os.remove(temp_file)
-    except:
-        Logger.log("w", "Couldn't remove temporary file %s", temp_file)
