@@ -59,7 +59,7 @@ class X3GWriter(MeshWriter):
                         os.remove(temp_gcode.name)
                         return False
                     #Read from the temporary X3G file and put it in the stream.
-                    stream.write(open(temp_x3g.name, "rb").read().decode("Latin-1")) #Latin-1 just copies the binary data, pretending it is a string.
+                    stream.write(open(temp_x3g.name, "rb").read())
 
                 except EnvironmentError as e:
                     if temp_x3g:
