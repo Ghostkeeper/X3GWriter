@@ -21,6 +21,9 @@ class X3GWriter(MeshWriter):
     #   \param mode The output mode to use. This is ignored, since it has no
     #   meaning.
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
+        if mode != MeshWriter.OutputMode.TextMode:
+            Logger.log("e", "X3G Writer does not support non-text mode.")
+            return False
         #Find an unused file name to temporarily write the g-code to.
         file_name = stream.name
         if not file_name: #Not a file stream.
