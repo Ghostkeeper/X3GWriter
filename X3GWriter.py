@@ -7,6 +7,7 @@ import os
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To get the g-code from the GCodeWriter plug-in.
+from UM.Application import Application
 import UM.Platform
 
 class X3GWriter(MeshWriter):
