@@ -1,13 +1,12 @@
-# Copyright (c) 2017 Ghostkeeper
-# Cura is released under the terms of the AGPLv3 or higher.
+# Copyright (c) 2018 Ghostkeeper
+# X3GWriter is released under the terms of the AGPLv3 or higher.
 
-import io
 import subprocess
 import os
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
-from UM.Application import Application
+from UM.PluginRegistry import PluginRegistry #To get the g-code from the GCodeWriter plug-in.
 import UM.Platform
 
 class X3GWriter(MeshWriter):
@@ -22,12 +21,6 @@ class X3GWriter(MeshWriter):
     #   \param mode The output mode to use. This is ignored, since it has no
     #   meaning.
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
-        #Get the g-code.
-        scene = Application.getInstance().getController().getScene()
-        gcode_list = getattr(scene, "gcode_list")
-        if not gcode_list:
-            return False
-
         #Find an unused file name to temporarily write the g-code to.
         file_name = stream.name
         if not file_name: #Not a file stream.
@@ -43,8 +36,7 @@ class X3GWriter(MeshWriter):
         #Write the g-code to the temporary file.
         try:
             with open(temp_file, "w", -1, "utf-8") as f:
-                for gcode in gcode_list:
-                    f.write(gcode)
+                PluginRegistry.getInstance().getPluginObject("GCodeWriter").write(f, None) #Let the g-code writer write its g-code into the temp file.
         except:
             Logger.log("e", "Error writing temporary g-code file %s", temp_file)
             _removeTemporary(temp_file)
@@ -63,10 +55,10 @@ class X3GWriter(MeshWriter):
 
         command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
         safes = [os.path.expandvars(p) for p in command]
-        Logger.log("d", "Command: %s", str(command))
+        Logger.log("d", "Calling GPX: {command}".format(command=" ".join(command)))
         stream.close() #Close the file so that the binary can write to it.
         try:
-            process = subprocess.Popen(safes, shell=True)
+            process = subprocess.Popen(safes)
             process.wait()
             output = process.communicate(b"y")
             Logger.log("d", str(output))
