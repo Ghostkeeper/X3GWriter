@@ -7,9 +7,32 @@ import os
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To get the g-code from the GCodeWriter plug-in.
+from UM.Application import Application
 import UM.Platform
 
 class X3GWriter(MeshWriter):
+    known_machines = {
+        "c3": "Cupcake Gen3 XYZ, Mk5/6 + Gen4 Extruder",
+        "c4": "Cupcake Gen4 XYZ, Mk5/6 + Gen4 Extruder",
+        "cp4": "Cupcake Pololu XYZ, Mk5/6 + Gen4 Extruder",
+        "cpp": "Cupcake Pololu XYZ, Mk5/6 + Pololu Extruder",
+        "cxy": "Core-XY with HBP - single extruder",
+        "cxysz": "Core-XY with HBP - single extruder, slow Z",
+        "cr1": "Clone R1 Single with HBP",
+        "cr1d": "Clone R1 Dual with HBP",
+        "r1": "Replicator 1 - single extruder",
+        "r1d": "Replicator 1 - dual extruder",
+        "r2": "Replicator 2 (default)",
+        "r2h": "Replicator 2 with HBP",
+        "r2x": "Replicator 2X",
+        "t6": "TOM Mk6 - single extruder",
+        "t7": "TOM Mk7 - single extruder",
+        "t7d": "TOM Mk7 - dual extruder",
+        "z": "ZYYX - single extruder",
+        "zd": "ZYYX - dual extruder",
+        "fcp": "FlashForge Creator Pro"
+    }
+    default_machine = "r1"
     def __init__(self):
         super().__init__()
         self._gcode = None
@@ -21,6 +44,9 @@ class X3GWriter(MeshWriter):
     #   \param mode The output mode to use. This is ignored, since it has no
     #   meaning.
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
+        if mode != MeshWriter.OutputMode.TextMode:
+            Logger.log("e", "X3G Writer does not support non-text mode.")
+            return False
         #Find an unused file name to temporarily write the g-code to.
         file_name = stream.name
         if not file_name: #Not a file stream.
@@ -53,7 +79,22 @@ class X3GWriter(MeshWriter):
             if os.path.isfile(binary_filename + "_macos"): #Still fall back to the default name if the MacOS-specific file doesn't exist.
                 binary_filename += "_macos"
 
-        command = [binary_filename, "-p", "-m", "r1d", "-c", os.path.join(binary_path, "cfg.ini"), temp_file, file_name]
+        command = [binary_filename, "-p"]
+
+        container_stack = Application.getInstance().getGlobalContainerStack()
+        if container_stack.getProperty("machine_gcode_flavor", "value") == "Makerbot":
+            command.append("-g")
+        machine = container_stack.getMetaDataEntry("machine_x3g_variant")
+        if not machine in X3GWriter.known_machines:
+            machine = X3GWriter.default_machine
+            Logger.log("d", "Using default machine because machine_x3g_variant metadata was missing or invalid: %s (%s)", str(machine), X3GWriter.known_machines[machine])
+        else:
+            Logger.log("d", "Using configured machine: %s (%s)", str(machine), X3GWriter.known_machines[machine])
+
+        command.extend(["-m", machine])
+
+        command.extend([temp_file, file_name])
+
         safes = [os.path.expandvars(p) for p in command]
         Logger.log("d", "Calling GPX: {command}".format(command=" ".join(command)))
         stream.close() #Close the file so that the binary can write to it.
