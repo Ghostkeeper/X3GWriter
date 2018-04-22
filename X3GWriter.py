@@ -8,9 +8,10 @@ import subprocess
 import tempfile
 import typing
 
+import UM.Application #To get settings from the global stack.
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
-from UM.Application import Application #To get the g-code from the scene.
+import UM.PluginRegistry #To get the g-code writer plug-in to obtain the g-code for us.
 import UM.Platform
 import cura.Settings.ExtruderManager
 
@@ -26,19 +27,11 @@ class X3GWriter(MeshWriter):
     #   \param mode The output mode to use. This is ignored, since it has no
     #   meaning.
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
-        #Get the g-code.
-        scene = Application.getInstance().getController().getScene()
-        gcode_list = getattr(scene, "gcode_list")
-        if not gcode_list:
-            Logger.log("e", "There is no g-code to write.")
-            return False
-
-        #Write the g-code to the temporary file.
+        #Write the g-code to a temporary file.
         temp_gcode = None
         try:
             temp_gcode = tempfile.NamedTemporaryFile("w", delete=False)
-            for gcode in gcode_list:
-                temp_gcode.write(gcode)
+            UM.PluginRegistry.PluginRegistry.getInstance().getPluginObject("GCodeWriter").write(temp_gcode, None)
             temp_gcode.close()
             temp_cfg = None
             try:
@@ -128,7 +121,7 @@ class X3GWriter(MeshWriter):
     #   \param cfg_stream A file stream that is supposed to get filled. All old
     #   data in the stream will get overwritten.
     def write_cfg(self, cfg_stream):
-        global_stack = Application.getInstance().getGlobalContainerStack()
+        global_stack = UM.Application.Application.getInstance().getGlobalContainerStack()
         extruder_stacks = cura.Settings.ExtruderManager.ExtruderManager.getInstance().getExtruderStacks()
         parser = configparser.ConfigParser()
 
