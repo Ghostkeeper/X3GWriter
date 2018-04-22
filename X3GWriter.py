@@ -16,10 +16,6 @@ import UM.Platform
 import cura.Settings.ExtruderManager
 
 class X3GWriter(MeshWriter):
-    def __init__(self):
-        super().__init__()
-        self._gcode = None
-
     ##  Write the X3G data to a stream.
     #
     #   \param stream The stream to write X3G data to.

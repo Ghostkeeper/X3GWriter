@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ghostkeeper
+# Copyright (c) 2018 Ghostkeeper
 # X3GWriter is released under the terms of the AGPLv3 or higher
 
 from . import X3GWriter
