@@ -131,25 +131,25 @@ class X3GWriter(MeshWriter):
         parser["printer"]["build_platform_temperature"] = str(global_stack.getProperty("material_bed_temperature", "value")) #Is different for layer 0 though!
 
         parser.add_section("x") #X axis.
-        parser["x"]["max_feedrate"] = str(global_stack.getProperty("machine_max_feedrate_x", "value")) #Maximum speed in this direction.
-        parser["x"]["home_feedrate"] = str(global_stack.getProperty("speed_travel", "value")) #Use normal travel speed to home with.
+        parser["x"]["max_feedrate"] = str(global_stack.getProperty("machine_max_feedrate_x", "value") * 60) #Maximum speed in this direction.
+        parser["x"]["home_feedrate"] = str(global_stack.getProperty("speed_travel", "value") * 60) #Use normal travel speed to home with.
         parser["x"]["steps_per_mm"] = str(global_stack.getProperty("machine_steps_per_mm_x", "value")) #How many steps of the stepper motor results in 1mm of movement for the print head.
         parser["x"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_x", "value") else "1" #0 if the endstop is at positive X rather than negative X.
 
         parser.add_section("y") #Y axis.
-        parser["y"]["max_feedrate"] = str(global_stack.getProperty("machine_max_feedrate_y", "value"))
-        parser["y"]["home_feedrate"] = str(global_stack.getProperty("speed_travel", "value"))
+        parser["y"]["max_feedrate"] = str(global_stack.getProperty("machine_max_feedrate_y", "value") * 60)
+        parser["y"]["home_feedrate"] = str(global_stack.getProperty("speed_travel", "value") * 60)
         parser["y"]["steps_per_mm"] = str(global_stack.getProperty("machine_steps_per_mm_y", "value"))
         parser["y"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_y", "value") else "1"
 
         parser.add_section("z") #Z axis.
-        parser["z"]["max_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value"))
-        parser["z"]["home_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value")) #Always just go at maximum speed to home the build plate.
+        parser["z"]["max_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value") * 60)
+        parser["z"]["home_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value") * 60) #Always just go at maximum speed to home the build plate.
         parser["z"]["steps_per_mm"] = str(global_stack.getProperty("machine_steps_per_mm_z", "value"))
         parser["z"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_z", "value") else "1"
 
         parser.add_section("a") #Right feeder (in the g-code labelled as T0).
-        parser["a"]["max_feedrate"] = str(extruder_stacks[0].getProperty("machine_max_feedrate_e", "value")) #Not configurable per extruder in Cura...
+        parser["a"]["max_feedrate"] = str(extruder_stacks[0].getProperty("machine_max_feedrate_e", "value") * 60) #Not configurable per extruder in Cura...
         parser["a"]["steps_per_mm"] = str(extruder_stacks[0].getProperty("machine_steps_per_mm_e", "value")) #How many steps of the stepper motor results in 1mm of filament movement.
         parser["a"]["motor_steps"] = str(extruder_stacks[0].getProperty("machine_feeder_wheel_diameter", "value") * math.pi * extruder_stacks[0].getProperty("machine_steps_per_mm_e", "value")) #Steps to make a full revolution of the feeder wheel.
         parser["a"]["has_heated_build_platform"] = str(extruder_stacks[0].getProperty("machine_heated_bed", "value")) #Not configurable per extruder in Cura...
@@ -163,7 +163,7 @@ class X3GWriter(MeshWriter):
 
         if global_stack.getProperty("machine_extruder_count", "value") >= 2:
             parser.add_section("b") #Left feeder (in the g-code labelled as T1).
-            parser["b"]["max_feedrate"] = str(extruder_stacks[1].getProperty("machine_max_feedrate_e", "value"))
+            parser["b"]["max_feedrate"] = str(extruder_stacks[1].getProperty("machine_max_feedrate_e", "value") * 60)
             parser["b"]["steps_per_mm"] = str(extruder_stacks[1].getProperty("machine_steps_per_mm_e", "value"))
             parser["b"]["motor_steps"] = str(extruder_stacks[1].getProperty("machine_feeder_wheel_diameter", "value") * math.pi * extruder_stacks[1].getProperty("machine_steps_per_mm_e", "value"))
             parser["b"]["has_heated_build_platform"] = str(extruder_stacks[1].getProperty("machine_heated_bed", "value"))
