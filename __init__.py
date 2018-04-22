@@ -3,6 +3,7 @@
 
 from . import X3GWriter
 
+import UM.Mesh.MeshWriter
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("x3gwriter")
 
@@ -12,7 +13,8 @@ def getMetaData():
             "output": [{
                 "extension": "x3g",
                 "description": catalog.i18nc("X3G Writer File Description", "X3G File"),
-                "mime_type": "application/x3g"
+                "mime_type": "application/x3g",
+                "mode": UM.Mesh.MeshWriter.MeshWriter.OutputMode.BinaryMode
             }]
         }
     }
