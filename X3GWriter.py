@@ -29,46 +29,55 @@ class X3GWriter(MeshWriter):
             temp_gcode = tempfile.NamedTemporaryFile("w", delete=False)
             UM.PluginRegistry.PluginRegistry.getInstance().getPluginObject("GCodeWriter").write(temp_gcode, None)
             temp_gcode.close()
-            temp_cfg = None
-            try:
-                temp_cfg = tempfile.NamedTemporaryFile("w", delete=False)
-                self.write_cfg(temp_cfg)
-                temp_cfg.close()
-                temp_x3g = None
-                try:
-                    temp_x3g = tempfile.NamedTemporaryFile("r", delete=False)
-                    temp_x3g.close()
-                    command = self.gpx_command(temp_cfg.name, temp_gcode.name, temp_x3g.name)
-                    try:
-                        process = subprocess.Popen(command)
-                        process.wait() #Wait until it's done converting.
-                        output = process.communicate(b"y")
-                        Logger.log("d", str(output))
-                    except EnvironmentError as e:
-                        Logger.log("e", "System call to X3G converter application failed: {error_msg}".format(error_msg=str(e)))
-                        os.remove(temp_x3g.name)
-                        os.remove(temp_cfg.name)
-                        os.remove(temp_gcode.name)
-                        return False
-                    #Read from the temporary X3G file and put it in the stream.
-                    stream.write(open(temp_x3g.name, "rb").read())
+            temp_cfg_name = None
+            machine = self.gpx_machine()
 
+            if machine is None:
+                try:
+                    temp_cfg = tempfile.NamedTemporaryFile("w", delete=False)
+                    temp_cfg_name = temp_cfg.name
+                    self.write_cfg(temp_cfg)
+                    temp_cfg.close()
                 except EnvironmentError as e:
-                    if temp_x3g:
-                        Logger.log("e", "Error writing temporary X3G file {temp_x3g}: {error_msg}".format(temp_x3g=temp_x3g, error_msg=str(e)))
-                        os.remove(temp_x3g.name)
+                    if temp_cfg:
+                        Logger.log("e", "Error writing temporary configuration file {temp_cfg}: {error_msg}".format(temp_cfg=temp_cfg, error_msg=str(e)))
+                        os.remove(temp_cfg.name)
                     else: #The NamedTemporaryFile constructor failed.
-                        Logger.log("e", "Error creating temporary X3G file: {error_msg}".format(error_msg=str(e)))
-                    os.remove(temp_x3g.name)
-                    os.remove(temp_cfg.name)
+                        Logger.log("e", "Error creating temporary configuration file: {error_msg}".format(error_msg=str(e)))
                     os.remove(temp_gcode.name)
                     return False
+            else:
+                Logger.log("d", "Using configured machine: %s (%s)", str(machine), X3GWriter.known_machines[machine])
+
+            temp_x3g = None
+            try:
+                temp_x3g = tempfile.NamedTemporaryFile("r", delete=False)
+                temp_x3g.close()
+                command = self.gpx_command(machine, temp_cfg_name, temp_gcode.name, temp_x3g.name)
+                try:
+                    process = subprocess.Popen(command)
+                    process.wait() #Wait until it's done converting.
+                    output = process.communicate(b"y")
+                    Logger.log("d", str(output))
+                except EnvironmentError as e:
+                    Logger.log("e", "System call to X3G converter application failed: {error_msg}".format(error_msg=str(e)))
+                    os.remove(temp_x3g.name)
+                    if temp_cfg_name is not None:
+                        os.remove(temp_cfg_name)
+                    os.remove(temp_gcode.name)
+                    return False
+                #Read from the temporary X3G file and put it in the stream.
+                stream.write(open(temp_x3g.name, "rb").read())
+
             except EnvironmentError as e:
-                if temp_cfg:
-                    Logger.log("e", "Error writing temporary configuration file {temp_cfg}: {error_msg}".format(temp_cfg=temp_cfg, error_msg=str(e)))
-                    os.remove(temp_cfg.name)
+                if temp_x3g:
+                    Logger.log("e", "Error writing temporary X3G file {temp_x3g}: {error_msg}".format(temp_x3g=temp_x3g, error_msg=str(e)))
+                    os.remove(temp_x3g.name)
                 else: #The NamedTemporaryFile constructor failed.
-                    Logger.log("e", "Error creating temporary configuration file: {error_msg}".format(error_msg=str(e)))
+                    Logger.log("e", "Error creating temporary X3G file: {error_msg}".format(error_msg=str(e)))
+                os.remove(temp_x3g.name)
+                if temp_cfg_name is not None:
+                    os.remove(temp_cfg_name)
                 os.remove(temp_gcode.name)
                 return False
         except EnvironmentError as e:
@@ -101,16 +110,53 @@ class X3GWriter(MeshWriter):
 
     ##  Gets the command that we need to call GPX with.
     #
-    #   \param configuration_file A file path to a configuration CFG file to run
-    #   GPX with.
+    #   \param machine The GPX machine to use or None. If given this takes precedence over configuration_file.
+    #   \param configuration_file A file path to a configuration CFG file to run GPX with or None.
     #   \param gcode_file The input g-code file path.
     #   \param x3g_file The output X3G file path.
     #   \return A command to run GPX with, as list of parameters.
-    def gpx_command(self, configuration_file, gcode_file, x3g_file) -> typing.List[str]:
+    def gpx_command(self, machine, configuration_file, gcode_file, x3g_file) -> typing.List[str]:
         gpx_executable = self.gpx_executable()
-        result = [gpx_executable, "-c", configuration_file, gcode_file, x3g_file]
+        if machine is not None:
+            result = [gpx_executable]
+            global_stack = UM.Application.Application.getInstance().getGlobalContainerStack()
+            if global_stack.getProperty("machine_gcode_flavor", "value") == "Makerbot":
+                result.append("-g")
+            result.extend(["-m", machine, gcode_file, x3g_file])
+        else:
+            result = [gpx_executable, "-c", configuration_file, gcode_file, x3g_file]
         Logger.log("d", "GPX command: {command}".format(command=" ".join(result)))
         return result
+
+    # Machine types known to GPX.
+    known_machines = {
+        "c3": "Cupcake Gen3 XYZ, Mk5/6 + Gen4 Extruder",
+        "c4": "Cupcake Gen4 XYZ, Mk5/6 + Gen4 Extruder",
+        "cp4": "Cupcake Pololu XYZ, Mk5/6 + Gen4 Extruder",
+        "cpp": "Cupcake Pololu XYZ, Mk5/6 + Pololu Extruder",
+        "cxy": "Core-XY with HBP - single extruder",
+        "cxysz": "Core-XY with HBP - single extruder, slow Z",
+        "cr1": "Clone R1 Single with HBP",
+        "cr1d": "Clone R1 Dual with HBP",
+        "r1": "Replicator 1 - single extruder",
+        "r1d": "Replicator 1 - dual extruder",
+        "r2": "Replicator 2 (default)",
+        "r2h": "Replicator 2 with HBP",
+        "r2x": "Replicator 2X",
+        "t6": "TOM Mk6 - single extruder",
+        "t7": "TOM Mk7 - single extruder",
+        "t7d": "TOM Mk7 - dual extruder",
+        "z": "ZYYX - single extruder",
+        "zd": "ZYYX - dual extruder",
+        "zp": "ZYYX pro",
+        "fcp": "FlashForge Creator Pro"
+    }
+
+    ## Gets the gpx machine type or none if unknown.
+    def gpx_machine(self):
+        global_stack = UM.Application.Application.getInstance().getGlobalContainerStack()
+        machine = global_stack.getMetaDataEntry("machine_x3g_variant")
+        return machine if machine in X3GWriter.known_machines else None
 
     ##  Fills a CFG file with settings to convert to X3G with.
     #
