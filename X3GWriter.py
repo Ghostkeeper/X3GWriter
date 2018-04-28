@@ -118,7 +118,7 @@ class X3GWriter(MeshWriter):
     def gpx_command(self, machine, configuration_file, gcode_file, x3g_file) -> typing.List[str]:
         gpx_executable = self.gpx_executable()
         if machine is not None:
-            result = [gpx_executable]
+            result = [gpx_executable, "-p"]
             global_stack = UM.Application.Application.getInstance().getGlobalContainerStack()
             if global_stack.getProperty("machine_gcode_flavor", "value") == "Makerbot":
                 result.append("-g")
