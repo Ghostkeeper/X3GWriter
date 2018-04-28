@@ -123,7 +123,7 @@ class X3GWriter(MeshWriter):
 
         parser.add_section("printer") #Slicer data.
         parser["printer"]["ditto_printing"] = "0" #Whether to duplicate the extrusion with all extruders. Cura doesn't support this.
-        parser["printer"]["build_progress"] = "0" #TODO: I don't know what data GPX needs to be able to 'build progress'.
+        parser["printer"]["build_progress"] = "1" #Let GPX calculate the percent done counter shown on the printer's display.
         parser["printer"]["packing_density"] = "1.0" #TODO: 1.0 is the default but I don't know what this means. It's not documented.
         parser["printer"]["recalculate_5d"] = "1" #Whether to re-compute the extrusion widths. Please do! We assume that GPX knows better what to do with the feedrate than Cura.
         parser["printer"]["nominal_filament_diameter"] = str(extruder_stacks[0].getProperty("material_diameter", "value")) #Use the first extruder since it was used for actual slicing, not just matching materials.
