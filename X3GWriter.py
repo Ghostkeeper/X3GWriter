@@ -178,7 +178,7 @@ class X3GWriter(MeshWriter):
         parser.add_section("machine")
         parser["machine"]["nominal_filament_diameter"] = str(extruder_stacks[0].getProperty("material_diameter", "value")) #Seems to be the same as the printer category.
         parser["machine"]["packing_density"] = "1.0" #Seems to be the same as the printer category.
-        parser["machine"]["nozzle_diameter"] = str(extruder_stacks[0].getProperty("machine_nozzle_diameter", "value")) #The diameter of the nozzle seems to be quintessentially per-extruder, but GPX doesn't allow setting it per extruder. Just take one of them.
+        parser["machine"]["nozzle_diameter"] = str(extruder_stacks[0].getProperty("machine_nozzle_size", "value")) #The diameter of the nozzle seems to be quintessentially per-extruder, but GPX doesn't allow setting it per extruder. Just take one of them.
         parser["machine"]["extruder_count"] = str(global_stack.getProperty("machine_extruder_count", "value"))
         parser["machine"]["timeout"] = "10" #Let's just always home at most 10 seconds. No need to make that configurable per printer (yet).
         #parser["machine"]["steps_per_mm"] = ? #I think the steps_per_mm per axis will override this.
