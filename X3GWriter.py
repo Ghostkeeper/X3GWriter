@@ -152,7 +152,7 @@ class X3GWriter(MeshWriter):
         parser["a"]["max_feedrate"] = str(extruder_stacks[0].getProperty("machine_max_feedrate_e", "value") * 60) #Not configurable per extruder in Cura...
         parser["a"]["steps_per_mm"] = str(extruder_stacks[0].getProperty("machine_steps_per_mm_e", "value")) #How many steps of the stepper motor results in 1mm of filament movement.
         parser["a"]["motor_steps"] = str(extruder_stacks[0].getProperty("machine_feeder_wheel_diameter", "value") * math.pi * extruder_stacks[0].getProperty("machine_steps_per_mm_e", "value")) #Steps to make a full revolution of the feeder wheel.
-        parser["a"]["has_heated_build_platform"] = str(extruder_stacks[0].getProperty("machine_heated_bed", "value")) #Not configurable per extruder in Cura...
+        parser["a"]["has_heated_build_platform"] = str(int(extruder_stacks[0].getProperty("machine_heated_bed", "value"))) #Not configurable per extruder in Cura...
 
         parser.add_section("right") #Right extruder (in the g-code labelled as T0).
         parser["right"]["active_temperature"] = str(extruder_stacks[0].getProperty("material_print_temperature", "value"))
@@ -166,7 +166,7 @@ class X3GWriter(MeshWriter):
             parser["b"]["max_feedrate"] = str(extruder_stacks[1].getProperty("machine_max_feedrate_e", "value") * 60)
             parser["b"]["steps_per_mm"] = str(extruder_stacks[1].getProperty("machine_steps_per_mm_e", "value"))
             parser["b"]["motor_steps"] = str(extruder_stacks[1].getProperty("machine_feeder_wheel_diameter", "value") * math.pi * extruder_stacks[1].getProperty("machine_steps_per_mm_e", "value"))
-            parser["b"]["has_heated_build_platform"] = str(extruder_stacks[1].getProperty("machine_heated_bed", "value"))
+            parser["b"]["has_heated_build_platform"] = str(int(extruder_stacks[1].getProperty("machine_heated_bed", "value")))
 
             parser.add_section("left") #Left extruder (in the g-code labelled as T1).
             parser["left"]["active_temperature"] = str(extruder_stacks[1].getProperty("material_print_temperature", "value"))
