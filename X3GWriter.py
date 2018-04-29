@@ -116,15 +116,15 @@ class X3GWriter(MeshWriter):
     #   \param x3g_file The output X3G file path.
     #   \return A command to run GPX with, as list of parameters.
     def gpx_command(self, machine, configuration_file, gcode_file, x3g_file) -> typing.List[str]:
-        gpx_executable = self.gpx_executable()
+        result = [self.gpx_executable()]
         if machine is not None:
-            result = [gpx_executable, "-p"]
             global_stack = UM.Application.Application.getInstance().getGlobalContainerStack()
             if global_stack.getProperty("machine_gcode_flavor", "value") == "Makerbot":
                 result.append("-g")
-            result.extend(["-m", machine, gcode_file, x3g_file])
+            result.extend(["-p", "-m", machine])
         else:
-            result = [gpx_executable, "-c", configuration_file, gcode_file, x3g_file]
+            result.extend(["-c", configuration_file])
+        result.extend([gcode_file, x3g_file])
         Logger.log("d", "GPX command: {command}".format(command=" ".join(result)))
         return result
 
