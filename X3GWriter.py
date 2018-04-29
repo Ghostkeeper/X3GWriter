@@ -29,13 +29,12 @@ class X3GWriter(MeshWriter):
             temp_gcode = tempfile.NamedTemporaryFile("w", delete=False)
             UM.PluginRegistry.PluginRegistry.getInstance().getPluginObject("GCodeWriter").write(temp_gcode, None)
             temp_gcode.close()
-            temp_cfg_name = None
+            temp_cfg = None
             machine = self.gpx_machine()
 
             if machine is None:
                 try:
                     temp_cfg = tempfile.NamedTemporaryFile("w", delete=False)
-                    temp_cfg_name = temp_cfg.name
                     self.write_cfg(temp_cfg)
                     temp_cfg.close()
                 except EnvironmentError as e:
@@ -53,6 +52,7 @@ class X3GWriter(MeshWriter):
             try:
                 temp_x3g = tempfile.NamedTemporaryFile("r", delete=False)
                 temp_x3g.close()
+                temp_cfg_name = temp_cfg.name if temp_cfg is not None else None
                 command = self.gpx_command(machine, temp_cfg_name, temp_gcode.name, temp_x3g.name)
                 try:
                     process = subprocess.Popen(command)
@@ -62,8 +62,8 @@ class X3GWriter(MeshWriter):
                 except EnvironmentError as e:
                     Logger.log("e", "System call to X3G converter application failed: {error_msg}".format(error_msg=str(e)))
                     os.remove(temp_x3g.name)
-                    if temp_cfg_name is not None:
-                        os.remove(temp_cfg_name)
+                    if temp_cfg is not None:
+                        os.remove(temp_cfg.name)
                     os.remove(temp_gcode.name)
                     return False
                 #Read from the temporary X3G file and put it in the stream.
@@ -76,8 +76,8 @@ class X3GWriter(MeshWriter):
                 else: #The NamedTemporaryFile constructor failed.
                     Logger.log("e", "Error creating temporary X3G file: {error_msg}".format(error_msg=str(e)))
                 os.remove(temp_x3g.name)
-                if temp_cfg_name is not None:
-                    os.remove(temp_cfg_name)
+                if temp_cfg is not None:
+                    os.remove(temp_cfg.name)
                 os.remove(temp_gcode.name)
                 return False
         except EnvironmentError as e:
