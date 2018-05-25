@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.2.3) #Only version it's tested with.
 
 #Project metadata.
 set(X3GWRITER_PLUGIN_NAME X3GWriter CACHE STRING "The name of the plug-in in distribution.")
-set(X3GWRITER_VERSION_MAJOR 2 CACHE STRING "The major version number.")
-set(X3GWRITER_VERSION_MINOR 6 CACHE STRING "The minor version number.")
+set(X3GWRITER_VERSION_MAJOR 4 CACHE STRING "The major version number.")
+set(X3GWRITER_VERSION_MINOR 0 CACHE STRING "The minor version number.")
 set(X3GWRITER_VERSION_PATCH 0 CACHE STRING "The patch version number.")
 
 #Dependencies.
@@ -13,6 +13,7 @@ ExternalProject_Add(GPX
 	GIT_REPOSITORY https://github.com/Ghostkeeper/GPX.git
 	GIT_TAG feature_cmake
 	CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} -G ${CMAKE_GENERATOR}
+	INSTALL_DIR ${CMAKE_INSTALL_DIR}
 )
 if(WIN32)
 	find_program(GPX_EXECUTABLE gpx.exe PATHS "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_INSTALL_PREFIX}/GPX/bin" "${CMAKE_INSTALL_PREFIX}/bin")
