@@ -119,7 +119,7 @@ class X3GWriter(MeshWriter):
         result = [self.gpx_executable()]
         if machine is not None:
             global_stack = UM.Application.Application.getInstance().getGlobalContainerStack()
-            if global_stack.getProperty("machine_gcode_flavor", "value") == "Makerbot":
+            if global_stack is not None and global_stack.getProperty("machine_gcode_flavor", "value") == "Makerbot":
                 result.append("-g")
             result.extend(["-p", "-m", machine])
         else:
