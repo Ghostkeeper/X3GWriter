@@ -1,16 +1,30 @@
 # X3GWriter
-X3G output plugin for Cura. This allows saving the slice output as an X3G file for Makerbot-family printers and Malyan.
+X3G output plugin for Cura. This allows saving the slice output as an X3G file for printers based on the Sailfish firmware.
 
 ## Support
 X3GWriter theoretically supports Windows, MacOS and Linux. However, support for MacOS has never been tested.
 
 ## Installation
-To install this plug-in follow the following steps:
+There are multiple ways in which you could install this plug-in.
 
+### Via the Toolbox in Cura
+1. Open Cura.
+2. In the application menu, go to Toolbox -> Browse Packages.
+3. Under the Plugins tab, find X3GWriter. Click the Install button to install it there.
+4. Restart Cura.
+
+### Via the Curaplugin file
+1. Download the .curaplugin file of the latest release from Github: https://github.com/Ghostkeeper/X3GWriter/releases/latest
+2. Drag the .curaplugin file onto the Cura window.
+3. Restart Cura.
+
+### Using the source code
 1. Download the .zip file from Github: https://github.com/Ghostkeeper/X3GWriter/archive/master.zip
 2. Open the .zip file with your favourite archiver application (e.g. 7-zip).
-3. Extract the contents of the .zip archive to Cura's plug-in directory in your installation, e.g. `C:\Program Files\Cura\plugins`.
-4. (Re)start Cura.
+3. Open Cura and in the application menu go to Help -> Show Configuration Folder.
+4. In the configuration folder, go the subfolder for your current Cura version and then the `/plugins` subfolder.
+5. Extract the contents of the .zip archive to that subfolder. Make sure that there is now a file called `.../plugins/X3GWriter/__init__.py`
+6. Restart Cura.
 
 ## Usage
 Once installed, you should now be able to select X3G output for printers that support it. Try the Malyan M180 printer. Load a mesh, and save the output to a file. In the file dialogue, you should now be able to select the X3G format.
@@ -20,7 +34,7 @@ X3GWriter is compiled using CMake. Basically what this does is to compile its de
 
 Compiling is done using the standard CMake workflow, namely:
 
-1. (Advised) Create a directory to build in, with the command `mkdir build`, then `cd build`.
+1. (Recommended) Create a directory to build in, with the command `mkdir build`, then `cd build`.
 2. Configure and generate with CMake with the command `cmake ..`.
 3. If desired, change the install directory. For instance:
    1. Find the plugins directory of Cura, such as `C:\Users\<You>\AppData\Roaming\cura\2.7\plugins` on Windows, `~/.local/cura/2.7/plugins` on Linux or `/Library/Application Support/cura/2.7/plugins` on MacOS.
