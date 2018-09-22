@@ -28,9 +28,12 @@ set(installed_files
 	${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
 	${CMAKE_CURRENT_SOURCE_DIR}/X3GWriter.py
 	${CMAKE_CURRENT_BINARY_DIR}/plugin.json
-	${GPX_EXECUTABLE}
 )
 install(FILES ${installed_files} DESTINATION X3GWriter)
+set(installed_executables #Which have to be installed with execute permissions.
+	${GPX_EXECUTABLE}
+)
+install(FILES ${installed_executables} DESTINATION X3GWriter PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 #Packaging, create a .curaplugin file.
 include(InstallRequiredSystemLibraries)
