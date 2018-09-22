@@ -1,5 +1,5 @@
 project(X3GWriter)
-cmake_minimum_required(VERSION 3.2.3) #Only version it's tested with.
+cmake_minimum_required(VERSION 3.2.3) #Oldest version it's been tested with.
 
 #Project metadata.
 set(X3GWRITER_PLUGIN_NAME X3GWriter CACHE STRING "The name of the plug-in in distribution.")
