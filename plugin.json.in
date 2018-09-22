@@ -2,7 +2,7 @@
 	"name": "${X3GWRITER_PLUGIN_NAME}",
 	"author": "Ghostkeeper",
 	"description": "Allows saving the resulting slice as an X3G file, to support printers that read this format (Malyan, Makerbot and other Sailfish-based printers).",
-	"version": "${X3GWRITER_VERSION_MAJOR}.${X3GWRITER_VERSION_MINOR}.${X3GWRITER_VERSION_PATCH}",
+	"version": "4.${X3GWRITER_VERSION_MAJOR}.${X3GWRITER_VERSION_MINOR}.${X3GWRITER_VERSION_PATCH}",
 	"api": 4,
 	"i18n-catalog": "x3gwriter"
 }
