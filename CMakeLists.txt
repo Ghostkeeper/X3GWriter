@@ -16,9 +16,9 @@ ExternalProject_Add(GPX
 	INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR} #Install to the current binary dir so as to not modify the user's system just for this dependency.
 )
 if(WIN32)
-	find_program(GPX_EXECUTABLE gpx.exe PATHS "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_INSTALL_PREFIX}/GPX/bin" "${CMAKE_INSTALL_PREFIX}/bin")
+	find_program(GPX_EXECUTABLE gpx.exe PATHS "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/bin" "${CMAKE_INSTALL_PREFIX}/GPX/bin" "${CMAKE_INSTALL_PREFIX}/bin")
 else()
-	find_program(GPX_EXECUTABLE gpx PATHS "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_INSTALL_PREFIX}/bin")
+	find_program(GPX_EXECUTABLE gpx PATHS "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/bin" "${CMAKE_INSTALL_PREFIX}/bin")
 endif()
 mark_as_advanced(GPX_EXECUTABLE)
 
