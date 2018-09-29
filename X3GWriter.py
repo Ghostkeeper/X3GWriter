@@ -163,8 +163,9 @@ class X3GWriter(MeshWriter):
     #   \param cfg_stream A file stream that is supposed to get filled. All old
     #   data in the stream will get overwritten.
     def write_cfg(self, cfg_stream):
-        global_stack = UM.Application.Application.getInstance().getGlobalContainerStack()
-        extruder_stacks = cura.Settings.ExtruderManager.ExtruderManager.getInstance().getExtruderStacks()
+        application = UM.Application.Application.getInstance()
+        global_stack = application.getGlobalContainerStack()
+        extruder_stacks = application.getExtruderManager().getActiveExtruderStacks()
         parser = configparser.ConfigParser()
 
         parser.add_section("printer") #Slicer data.
