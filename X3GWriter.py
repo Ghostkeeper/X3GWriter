@@ -4,6 +4,7 @@
 import configparser #To write a CFG file as configuration for GPX.
 import math #For PI.
 import os
+import stat #To give execute permissions to GPX.
 import subprocess
 import tempfile
 import typing
@@ -106,6 +107,7 @@ class X3GWriter(MeshWriter):
         result = os.path.expanduser(result)
         result = os.path.expandvars(result)
         Logger.log("d", "GPX executable: {executable_file}".format(executable_file=result))
+        os.chmod(result, stat.IXUSR | stat.IRUSR | stat.IRGRP | stat.IROTH)
         return result
 
     ##  Gets the command that we need to call GPX with.
