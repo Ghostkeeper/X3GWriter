@@ -107,7 +107,7 @@ class X3GWriter(MeshWriter):
         result = os.path.expanduser(result)
         result = os.path.expandvars(result)
         Logger.log("d", "GPX executable: {executable_file}".format(executable_file=result))
-        os.chmod(result, stat.IXUSR | stat.IRUSR | stat.IRGRP | stat.IROTH)
+        os.chmod(result, stat.S_IXUSR | stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
         return result
 
     ##  Gets the command that we need to call GPX with.
