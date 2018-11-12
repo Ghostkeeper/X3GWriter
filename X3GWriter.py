@@ -57,8 +57,8 @@ class X3GWriter(MeshWriter):
                 command = self.gpx_command(machine, temp_cfg_name, temp_gcode.name, temp_x3g.name)
                 try:
                     process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    process.wait() #Wait until it's done converting.
                     output = process.communicate(b"y")
+                    process.wait() #Wait until it's done converting.
                     Logger.log("d", str(output))
                 except EnvironmentError as e:
                     Logger.log("e", "System call to X3G converter application failed: {error_msg}".format(error_msg=str(e)))
