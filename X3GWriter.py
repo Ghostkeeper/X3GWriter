@@ -56,7 +56,7 @@ class X3GWriter(MeshWriter):
                 temp_cfg_name = temp_cfg.name if temp_cfg is not None else None
                 command = self.gpx_command(machine, temp_cfg_name, temp_gcode.name, temp_x3g.name)
                 try:
-                    process = subprocess.Popen(command)
+                    process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     process.wait() #Wait until it's done converting.
                     output = process.communicate(b"y")
                     Logger.log("d", str(output))
