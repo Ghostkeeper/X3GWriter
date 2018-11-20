@@ -14,7 +14,7 @@ from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
 import UM.PluginRegistry #To get the g-code writer plug-in to obtain the g-code for us.
 import UM.Platform
-import cura.Settings.ExtruderManager
+
 
 class X3GWriter(MeshWriter):
     ##  Write the X3G data to a stream.
