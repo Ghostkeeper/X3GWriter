@@ -1,6 +1,8 @@
 # X3GWriter
 X3G output plugin for Cura. This allows saving the slice output as an X3G file for printers based on the Sailfish firmware.
 
+This plug-in takes the normal g-code output of Cura, and converts it using [GPX](https://github.com/Ghostkeeper/GPX) to the X3G format.
+
 ## Support
 X3GWriter supports Windows, MacOS and Linux.
 
