@@ -14,7 +14,7 @@ from UM.Mesh.MeshWriter import MeshWriter
 from UM.Logger import Logger
 import UM.PluginRegistry #To get the g-code writer plug-in to obtain the g-code for us.
 import UM.Platform
-import cura.Settings.ExtruderManager
+
 
 class X3GWriter(MeshWriter):
     ##  Write the X3G data to a stream.
@@ -107,7 +107,7 @@ class X3GWriter(MeshWriter):
         result = os.path.expanduser(result)
         result = os.path.expandvars(result)
         Logger.log("d", "GPX executable: {executable_file}".format(executable_file=result))
-        os.chmod(result, stat.S_IXUSR | stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
+        os.chmod(result, 0o755)
         return result
 
     ##  Gets the command that we need to call GPX with.
