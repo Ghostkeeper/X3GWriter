@@ -2,7 +2,23 @@
 X3G output plugin for Cura. This allows saving the slice output as an X3G file for printers based on the Sailfish firmware.
 
 ## Support
-X3GWriter theoretically supports Windows, MacOS and Linux. However, support for MacOS has never been tested.
+X3GWriter supports Windows, MacOS and Linux.
+
+X3GWriter supports all parameters of GPX to convert g-code to X3G. Our version of GPX has profiles for the following printers:
+* Cupcake Gen3 XYZ
+* Cupcake Gen4 XYZ
+* Cupcake Pololu XYZ
+* Core-XY with heated build plate, single extruder
+* Clone R1
+* Replicator 1
+* Replicator 2
+* Replicator 2X
+* TOM Mk6
+* TOM Mk7
+* ZYYX
+* FlashForge Creator Pro
+
+If your printer is not in there, it can still be defined (using Cura's *.def.json files) with custom parameters.
 
 ## Installation
 There are multiple ways in which you could install this plug-in.
