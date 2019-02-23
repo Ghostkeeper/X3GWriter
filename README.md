@@ -48,6 +48,8 @@ There are multiple ways in which you could install this plug-in.
 2. Drag the .curaplugin file onto the Cura window.
 3. Restart Cura.
 
+Note: This functionality is currently broken in Cura as of this commit: https://github.com/Ultimaker/Cura/pull/3663/commits/0f966115e65762149d61009b4968598a5bb33c20 . It will not function in Cura 3.6 and 4.0.
+
 ### Using the source code
 1. Download the .zip file from Github: https://github.com/Ghostkeeper/X3GWriter/archive/master.zip
 2. Open the .zip file with your favourite archiver application (e.g. 7-zip).
