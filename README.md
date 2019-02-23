@@ -22,6 +22,18 @@ X3GWriter supports all parameters of GPX to convert g-code to X3G. Our version o
 
 If your printer is not in there, it can still be defined (using Cura's *.def.json files) with custom parameters.
 
+Different versions of Cura are compatible with different versions of X3GWriter. These are the versions of X3GWriter you'll need for every version of Cura:
+* Cura 4.0: [v1.1.9](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.1.9)
+* Cura 3.6: [v1.1.7](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.1.7)
+* Cura 3.5: [v1.1.7](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.1.7)
+* Cura 3.4: [v1.1.1](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.1.1)
+* Cura 3.3: [v1.1.1](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.1.1)
+* Cura 3.2: [v1.1.1](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.1.1)
+* Cura 3.1: [v1.0.0](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.0)
+* Cura 3.0: [v1.0.0](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.0)
+* Cura 2.7: [v1.0.0](https://github.com/Ghostkeeper/X3GWriter/releases/tag/v1.0)
+* Before Cura 2.7: Not supported.
+
 ## Installation
 There are multiple ways in which you could install this plug-in.
 
