@@ -55,10 +55,10 @@ Compiling is done using the standard CMake workflow, namely:
 1. (Recommended) Create a directory to build in, with the command `mkdir build`, then `cd build`.
 2. Configure and generate with CMake with the command `cmake ..`.
 3. If desired, change the install directory. For instance:
-   1. Find the plugins directory of Cura, such as `C:\Users\<You>\AppData\Roaming\cura\2.7\plugins` on Windows, `~/.local/cura/2.7/plugins` on Linux or `/Library/Application Support/cura/2.7/plugins` on MacOS.
+   1. Find the plugins directory of Cura, such as `C:\Users\<You>\AppData\Roaming\cura\<Version>\plugins` on Windows, `~/.local/cura/<Version>/plugins` on Linux or `/Library/Application Support/cura/<Version>/plugins` on MacOS.
    2. Open CMake configuration using `cmake-gui .` or `ccmake .`.
    3. Toggle the advanced options. In CMake-GUI this is done with a checkbox at the top. In ccmake this is with the `t` key.
-   4. Change the variable `CMAKE_INSTALL_PREFIX` to the installation directory found at step 3.1.
+   4. Change the variable `CMAKE_INSTALL_PREFIX` to the installation directory found at step 3.i.
 4. Configure. In CMake-GUI this is done with the "Configure" button. In ccmake this is done with the `c` key.
    1. If there were any errors, this is likely when you need to resolve them. In particular, please check whether the X3G executable was found. If it wasn't found, you will need to point CMake to the location of your GPX executable (likely in your Program Files or /usr/local somewhere).
 5. Generate. In CMake-GUI this is done with the "Generate" button. In ccmake this is done with the `g` key.
