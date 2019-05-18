@@ -6,6 +6,7 @@ set(X3GWRITER_PLUGIN_NAME X3GWriter CACHE STRING "The name of the plug-in in dis
 set(X3GWRITER_VERSION_MAJOR 4 CACHE STRING "The major version number.")
 set(X3GWRITER_VERSION_MINOR 0 CACHE STRING "The minor version number.")
 set(X3GWRITER_VERSION_PATCH 0 CACHE STRING "The patch version number.")
+set(X3GWRITER_SUPPORTED_SDKS "5.0.0;6.0.0" CACHE STRING "List of supported Cura SDK versions.")
 
 #Dependencies.
 include(ExternalProject)
@@ -29,6 +30,28 @@ set(installed_files
 	${CMAKE_CURRENT_SOURCE_DIR}/X3GWriter.py
 	${CMAKE_CURRENT_BINARY_DIR}/plugin.json
 )
+
+#Find out where to install this thing.
+if(WIN32)
+	set(cura_directory "$ENV{APPDATA}\\cura")
+elseif(APPLE)
+	set(cura_directory "$ENV{HOME}/Library/Application Support/cura")
+else()
+	set(cura_directory "$ENV{HOME}/.local/share/cura")
+endif()
+#Figure out the latest Cura release that's installed.
+file(GLOB versions RELATIVE "${cura_directory}" "${cura_directory}/*")
+set(latest_version 2.0)
+foreach(version ${versions})
+	if(IS_DIRECTORY "${cura_directory}/${version}")
+		if(${version} VERSION_GREATER ${latest_version})
+			set(latest_version ${version})
+		endif()
+	endif()
+endforeach()
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+	set(CMAKE_INSTALL_PREFIX "${cura_directory}/${latest_version}/plugins" CACHE PATH "Location of the Cura plug-ins folder to install this plug-in to." FORCE)
+endif()
 install(FILES ${installed_files} DESTINATION X3GWriter)
 set(installed_executables #Which have to be installed with execute permissions.
 	${GPX_EXECUTABLE}
