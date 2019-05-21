@@ -26,6 +26,7 @@ There are multiple ways in which you could install this plug-in.
 1. **Marketplace:** In Cura, go to the Marketplace and find X3GWriter in the list. Click it, then click on "install" and restart Cura.
 2. **From package:** Go to the [releases](https://github.com/Ghostkeeper/X3GWriter/releases) page to download a plug-in package file. For some old releases of Cura, you'll need a different release of X3GWriter:
    * Cura 3.5 and up: The most recent release is always compatible, but you must select the correct SDK version:
+
      |Cura version|SDK|
      |------------|---|
      |3.5         |5  |
