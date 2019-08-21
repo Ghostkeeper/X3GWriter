@@ -28,6 +28,9 @@ mark_as_advanced(GPX_EXECUTABLE)
 set(installed_files
 	__init__.py
 	X3GWriter.py
+	README.md
+	LICENSE
+	icon.svg
 )
 set(installed_executables #Which have to be installed with execute permissions.
 	${GPX_EXECUTABLE}
