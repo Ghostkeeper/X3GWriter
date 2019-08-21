@@ -192,8 +192,11 @@ class X3GWriter(MeshWriter):
         parser["y"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_y", "value") else "1"
 
         parser.add_section("z") #Z axis.
-        parser["z"]["max_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value") * 60)
-        parser["z"]["home_feedrate"] = str(global_stack.getProperty("max_feedrate_z_override", "value") * 60) #Always just go at maximum speed to home the build plate.
+        max_feedrate_z = global_stack.getProperty("max_feedrate_z_override", "value")
+        if max_feedrate_z is None:
+            max_feedrate_z = global_stack.getProperty("machine_max_feedrate_z", "value")
+        parser["z"]["max_feedrate"] = str(max_feedrate_z * 60)
+        parser["z"]["home_feedrate"] = str(max_feedrate_z * 60) #Always just go at maximum speed to home the build plate.
         parser["z"]["steps_per_mm"] = str(global_stack.getProperty("machine_steps_per_mm_z", "value"))
         parser["z"]["endstop"] = "0" if global_stack.getProperty("machine_endstop_positive_direction_z", "value") else "1"
 
