@@ -27,19 +27,29 @@ There are multiple ways in which you could install this plug-in.
 2. **From package:** Go to the [releases](https://github.com/Ghostkeeper/X3GWriter/releases) page to download a plug-in package file. For some old releases of Cura, you'll need a different release of X3GWriter:
    * Cura 3.5 and up: The most recent release is always compatible, but you must select the correct SDK version:
 
-     |Cura version|SDK|
-     |------------|---|
-     |3.5         |5  |
-     |3.6         |5  |
-     |4.0         |6  |
-     |4.1         |6  |
+     |Cura version|SDK  |
+     |------------|-----|
+     |3.5         |5.0.0|
+     |3.6         |5.0.0|
+     |4.0         |6.0.0|
+     |4.1         |6.0.0|
+     |4.2         |6.0.0|
+     |4.3         |6.0.0|
+     |4.4         |7.0.0|
    * Cura 3.4: v1.1.1
    * Cura 3.3: v1.1.1
    * Cura 3.2: v1.1.1
    * Cura 3.1: v1.0.0
    * Cura 3.0: v1.0.0
    * Cura 2.7: v1.0.0
-   * Before Cura 2.7: Not supported.
+   * Cura 2.6: v1.0.0
+   * Cura 2.5: v1.0.0
+   * Cura 2.4: v1.0.0
+   * Cura 2.3: v1.0.0
+   * Cura 2.1: v1.0.0
+   * Cura 15.10: v1.0.0
+   * Cura 15.06: v1.0.0
+   * Before Cura 15.06: Not supported.
 3. **Building packages:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip), then in a terminal run `cmake . && make pack` to create a .curapackage file for each supported SDK version. Similar to the previous option, select the SDK version that fits your version of Cura and drag it onto the Cura window, then restart Cura.
 4. **From source:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip). In Cura, click on "Help", "Show configuration folder". Navigate to the "plugins" subfolder and unpack the .zip file from Github there. Rename the folder to "X3GWriter" (removing any suffix that Github added such as "-master"). Restart Cura.
 
