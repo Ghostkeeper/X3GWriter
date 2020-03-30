@@ -41,9 +41,12 @@ class X3GWriter(MeshWriter):
                 except EnvironmentError as e:
                     if temp_cfg:
                         Logger.log("e", "Error writing temporary configuration file {temp_cfg}: {error_msg}".format(temp_cfg=temp_cfg, error_msg=str(e)))
-                        os.remove(temp_cfg.name)
+                        self.setInformation("Error writing temporary configuration file {temp_cfg}: {error_msg}".format(temp_cfg=temp_cfg, error_msg=str(e)))
+                        if os.path.exists(temp_cfg.name):
+                            os.remove(temp_cfg.name)
                     else: #The NamedTemporaryFile constructor failed.
                         Logger.log("e", "Error creating temporary configuration file: {error_msg}".format(error_msg=str(e)))
+                        self.setInformation("Error writing temporary configuration file: {error_msg}".format(error_msg=str(e)))
                     os.remove(temp_gcode.name)
                     return False
             else:
@@ -62,10 +65,13 @@ class X3GWriter(MeshWriter):
                     Logger.log("d", str(output))
                 except EnvironmentError as e:
                     Logger.log("e", "System call to X3G converter application failed: {error_msg}".format(error_msg=str(e)))
-                    os.remove(temp_x3g.name)
-                    if temp_cfg is not None:
+                    self.setInformation("System call to X3G converter application failed: {error_msg}".format(error_msg=str(e)))
+                    if os.path.exists(temp_x3g.name):
+                        os.remove(temp_x3g.name)
+                    if temp_cfg is not None and os.path.exists(temp_cfg.name):
                         os.remove(temp_cfg.name)
-                    os.remove(temp_gcode.name)
+                    if os.path.exists(temp_gcode.name):
+                        os.remove(temp_gcode.name)
                     return False
                 #Read from the temporary X3G file and put it in the stream.
                 stream.write(open(temp_x3g.name, "rb").read())
@@ -73,20 +79,26 @@ class X3GWriter(MeshWriter):
             except EnvironmentError as e:
                 if temp_x3g:
                     Logger.log("e", "Error writing temporary X3G file {temp_x3g}: {error_msg}".format(temp_x3g=temp_x3g, error_msg=str(e)))
+                    self.setInformation("Error writing temporary X3G file {temp_x3g}: {error_msg}".format(temp_x3g=temp_x3g, error_msg=str(e)))
                     os.remove(temp_x3g.name)
                 else: #The NamedTemporaryFile constructor failed.
                     Logger.log("e", "Error creating temporary X3G file: {error_msg}".format(error_msg=str(e)))
-                os.remove(temp_x3g.name)
-                if temp_cfg is not None:
+                    self.setInformation("Error writing temporary X3G file: {error_msg}".format(error_msg=str(e)))
+                if os.path.exists(temp_x3g.name):
+                    os.remove(temp_x3g.name)
+                if temp_cfg is not None and os.path.exists(temp_cfg.name):
                     os.remove(temp_cfg.name)
-                os.remove(temp_gcode.name)
+                if os.path.exists(temp_gcode.name):
+                    os.remove(temp_gcode.name)
                 return False
         except EnvironmentError as e:
             if temp_gcode:
-                Logger.log("e", "Error writing temporary g-code file {file_name}: {error_msg}".format(file_name = temp_gcode.name, error_msg=str(e)))
+                Logger.log("e", "Error writing temporary g-code file {file_name}: {error_msg}".format(file_name=temp_gcode.name, error_msg=str(e)))
+                self.setInformation("Error writing temporary g-code file {file_name}: {error_msg}".format(file_name=temp_gcode.name, error_msg=str(e)))
                 os.remove(temp_gcode.name)
             else: #The NamedTemporaryFile constructor failed.
                 Logger.log("e", "Error creating temporary g-code file: {error_msg}".format(error_msg=str(e)))
+                self.setInformation("Error creating temporary g-code file: {error_msg}".format(error_msg=str(e)))
             return False
 
         return True #No exceptions.
