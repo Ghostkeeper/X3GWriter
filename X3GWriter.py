@@ -1,9 +1,11 @@
-# Copyright (c) 2018 Ghostkeeper
+# Copyright (c) 2020 Ghostkeeper
 # X3GWriter is released under the terms of the AGPLv3 or higher.
 
 import configparser #To write a CFG file as configuration for GPX.
+import io  # For StringIO.
 import math #For PI.
 import os
+import re  # To remove non-ASCII7 characters.
 import stat #To give execute permissions to GPX.
 import subprocess
 import tempfile
@@ -15,6 +17,7 @@ from UM.Logger import Logger
 import UM.PluginRegistry #To get the g-code writer plug-in to obtain the g-code for us.
 import UM.Platform
 
+illegal_characters = r"[^\x01-\x7F]+"  # GPX isn't able to handle characters other than 0-127. For safety I'll disallow 0x00 too.
 
 class X3GWriter(MeshWriter):
     ##  Write the X3G data to a stream.
@@ -27,8 +30,13 @@ class X3GWriter(MeshWriter):
         #Write the g-code to a temporary file.
         temp_gcode = None
         try:
+            stringio = io.StringIO()
+            UM.PluginRegistry.PluginRegistry.getInstance().getPluginObject("GCodeWriter").write(stringio, None)
+            stringio.seek(0)
+            gcode_data = stringio.read()
+            gcode_data = re.sub(illegal_characters, "", gcode_data)
             temp_gcode = tempfile.NamedTemporaryFile("w", delete=False)
-            UM.PluginRegistry.PluginRegistry.getInstance().getPluginObject("GCodeWriter").write(temp_gcode, None)
+            temp_gcode.write(gcode_data)
             temp_gcode.close()
             temp_cfg = None
             machine = self.gpx_machine()
