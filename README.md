@@ -36,6 +36,7 @@ There are multiple ways in which you could install this plug-in.
      |4.2         |6.0.0|
      |4.3         |6.0.0|
      |4.4         |7.0.0|
+     |4.5         |7.0.0|
    * Cura 3.4: v1.1.1
    * Cura 3.3: v1.1.1
    * Cura 3.2: v1.1.1
