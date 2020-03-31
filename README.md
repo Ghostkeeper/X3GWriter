@@ -52,13 +52,13 @@ There are multiple ways in which you could install this plug-in.
    * Cura 15.06: v1.0.0
    * Before Cura 15.06: Not supported.
 3. **Building packages:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip), then in a terminal run `cmake . && make pack` to create a .curapackage file for each supported SDK version. Similar to the previous option, select the SDK version that fits your version of Cura and drag it onto the Cura window, then restart Cura.
-4. **From source:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip). In Cura, click on "Help", "Show configuration folder". Navigate to the "plugins" subfolder and unpack the .zip file from Github there. Rename the folder to "X3GWriter" (removing any suffix that Github added such as "-master"). Restart Cura.
+4. **From source:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip). In Cura, click on "Help", "Show configuration folder". Navigate to the "plugins" subfolder and unpack the .zip file from Github there. Rename the folder to "X3GWriter" (removing any suffix that Github added such as "-master"). Rename the `plugin.json.in` file to simply `plugin.json` and fill in the CMake variables. Then restart Cura.
 
 ## Usage
 Once installed, you should now be able to select X3G output for printers that support it. Try the Malyan M180 printer. Load a mesh, and save the output to a file. In the file dialogue, you should now be able to select the X3G format.
 
 ## Compiling
-X3GWriter is compiled using CMake. Basically what this does is to compile its dependecy, GPX, and places it in the correct location when you install or package.
+X3GWriter is compiled using CMake. Basically what this does is to compile its dependency, GPX, and places it in the correct location when you install or package.
 
 Compiling is done using the standard CMake workflow, namely:
 
