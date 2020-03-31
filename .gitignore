@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+gpx
+gpx.exe
+gpx_macos
 
-#Building
-build
+#Building.
+plugin.json
