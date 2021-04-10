@@ -29,30 +29,15 @@ There are multiple ways in which you could install this plug-in.
 
      |Cura version|SDK  |
      |------------|-----|
-     |3.5         |5.0.0|
-     |3.6         |5.0.0|
-     |4.0         |6.0.0|
-     |4.1         |6.0.0|
-     |4.2         |6.0.0|
-     |4.3         |6.0.0|
-     |4.4         |7.0.0|
-     |4.5         |7.0.0|
-   * Cura 3.4: v1.1.1
-   * Cura 3.3: v1.1.1
-   * Cura 3.2: v1.1.1
-   * Cura 3.1: v1.0.0
-   * Cura 3.0: v1.0.0
-   * Cura 2.7: v1.0.0
-   * Cura 2.6: v1.0.0
-   * Cura 2.5: v1.0.0
-   * Cura 2.4: v1.0.0
-   * Cura 2.3: v1.0.0
-   * Cura 2.1: v1.0.0
-   * Cura 15.10: v1.0.0
-   * Cura 15.06: v1.0.0
+     |4.4 - 4.9   |7.0.0|
+     |4.0 - 4.3   |6.0.0|
+     |3.5 and 3.6 |5.0.0|
+   * Cura 3.2 - 3.4: v1.1.1
+   * Cura 2.1 - 3.1: v1.0.0
+   * Cura 15.06 and 15.10: v1.0.0
    * Before Cura 15.06: Not supported.
 3. **Building packages:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip), then in a terminal run `cmake . && make pack` to create a .curapackage file for each supported SDK version. Similar to the previous option, select the SDK version that fits your version of Cura and drag it onto the Cura window, then restart Cura.
-4. **From source:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip). In Cura, click on "Help", "Show configuration folder". Navigate to the "plugins" subfolder and unpack the .zip file from Github there. Rename the folder to "X3GWriter" (removing any suffix that Github added such as "-master"). Rename the `plugin.json.in` file to simply `plugin.json` and fill in the CMake variables. Then restart Cura.
+4. **From source:** Download the latest source code [from Github](https://github.com/Ghostkeeper/X3GWriter/archive/master.zip). In Cura, click on "Help", "Show configuration folder". Navigate to the "plugins" subfolder and unpack the .zip file from Github there. Rename the folder to "X3GWriter" (removing any suffix that Github added such as "-master"). Rename the `plugin.json.in` file to simply `plugin.json` and fill in the CMake variables inside. Then download the GPX executable from [its repository](https://github.com/markwal/GPX/releases) which is appropriate for your operating system. For MaCOS, extract the `gpx` executable from the .dmg archive. Finally, restart Cura.
 
 ## Usage
 Once installed, you should now be able to select X3G output for printers that support it. Try the Malyan M180 printer. Load a mesh, and save the output to a file. In the file dialogue, you should now be able to select the X3G format.
