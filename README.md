@@ -5,20 +5,46 @@ This plug-in takes the normal g-code output of Cura, and converts it using [GPX]
 
 ## Support
 X3GWriter supports all parameters of GPX to convert g-code to X3G. Our version of GPX has profiles for the following printers:
-* Cupcake Gen3 XYZ
-* Cupcake Gen4 XYZ
-* Cupcake Pololu XYZ
-* Core-XY with heated build plate, single extruder
-* Clone R1
-* Replicator 1
-* Replicator 2
-* Replicator 2X
-* TOM Mk6
-* TOM Mk7
-* ZYYX
-* FlashForge Creator Pro
+* Cupcake Gen3 XYZ (`c3`)
+* Cupcake Gen4 XYZ (`c4`)
+* Cupcake Pololu XYZ, Generation 4 extruder (`cp4`)
+* Cupcake Polulu XYZ, Polulu extruder (`cpp`)
+* Core-XY (`cxy`)
+* Core-XY, slow Z (`cxysz`)
+* Clone R1 (`cr1`)
+* Clone R1 Dual (`cr1d`)
+* FlashForge Creator Pro (`fcp`)
+* Replicator 1 (`r1`)
+* Replicator 1 Dual (`r1d`)
+* Replicator 2 (`r2`)
+* Replicator 2 with heated bed (`r2h`)
+* Replicator 2X (`r2x`)
+* TOM Mk6 (`t6`)
+* TOM Mk7 (`t7`)
+* TOM Mk7 Dual (`t7d`)
+* ZYYX (`z`)
+* ZYYX Dual (`zd`)
+* ZYYX Pro (`zp`)
 
 If your printer is not in there, it can still be defined (using Cura's *.def.json files) with custom parameters.
+
+The printer profiles installed in Cura by default should automatically use these built-in GPX profiles if available. If you are writing your own printer profile, you can add the metadata entry `machine_x3g_variant` to the abbreviated names in the list above.
+
+If there is no profile available for your printer, this plug-in will use Cura's settings instead by way of customising the conversion. These can be set in a customised .def.json file for your printer, or by installing the Printer Settings plug-in from the Marketplace. The following settings are relevant for conversion to X3G:
+* Diameter
+* G-code Flavor
+* Printing Temperature
+* Build Plate Temperature
+* Stand-by Temperature
+* Maximum Speed X/Y/Z
+* Maximum Z Speed (up to Cura 4.1)
+* Maximum Feedrate
+* Travel Speed
+* Steps Per Millimeter (X/Y/Z/E)
+* X/Y/Z Endstop in Positive Direction
+* Feeder Wheel Diameter
+* Has Heated Build Plate
+* Nozzle Diameter
 
 ## Installation
 There are multiple ways in which you could install this plug-in.
