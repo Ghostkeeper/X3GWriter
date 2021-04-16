@@ -1,3 +1,9 @@
+1.1.12 - Bug Fixes
+====
+* Fixed bug where GPX would crash if the start or end g-code contains characters not in ASCII-7.
+* Improved error messages if something would go wrong (e.g. file permissions).
+* Update GPX executables on all platforms to version 2.6.8.
+
 1.1.11 - Bug Fixes
 ====
 * Incremented SDK version to work with Cura 4.4.
