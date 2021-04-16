@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.2.3) #Oldest version it's been tested with.
 set(X3GWRITER_PLUGIN_NAME X3GWriter CACHE STRING "The name of the plug-in in distribution.")
 set(X3GWRITER_VERSION_MAJOR 1 CACHE STRING "The major version number.")
 set(X3GWRITER_VERSION_MINOR 1 CACHE STRING "The minor version number.")
-set(X3GWRITER_VERSION_PATCH 11 CACHE STRING "The patch version number.")
+set(X3GWRITER_VERSION_PATCH 12 CACHE STRING "The patch version number.")
 set(X3GWRITER_SUPPORTED_SDKS "5.0.0;6.0.0;7.0.0" CACHE STRING "List of supported Cura SDK versions.")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/plugin.json.in" "${CMAKE_CURRENT_BINARY_DIR}/plugin.json")
 
