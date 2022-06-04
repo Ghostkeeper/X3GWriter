@@ -1,3 +1,7 @@
+1.1.13 - Bug Fixes
+====
+* Incremented SDK version to work with Cura 5.0.
+
 1.1.12 - Bug Fixes
 ====
 * Fixed bug where GPX would crash if the start or end g-code contains characters not in ASCII-7.

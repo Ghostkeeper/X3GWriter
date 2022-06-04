@@ -12,7 +12,8 @@ There are multiple ways in which you could install this plug-in.
 
      |Cura version|SDK  |
      |------------|-----|
-     |4.4 - 4.9   |7.0.0|
+     |5.0         |8.0.0|
+     |4.4 - 4.13  |7.0.0|
      |4.0 - 4.3   |6.0.0|
      |3.5 and 3.6 |5.0.0|
    * Cura 3.2 - 3.4: v1.1.1
